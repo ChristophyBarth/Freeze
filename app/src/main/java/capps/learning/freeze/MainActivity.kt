@@ -2,66 +2,47 @@ package capps.learning.freeze
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import capps.learning.freeze.databinding.ActivityMainBinding
-import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private var gender: String? = null
+    private lateinit var categories : ArrayList<Category>
+    private lateinit var categoryAdapter: CategoryAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.login.setOnClickListener {
-            if (gender == null) {
-                Snackbar.make(binding.root, "Kindly select your gender", Snackbar.LENGTH_SHORT)
-                    .show()
-            } else {
-            Snackbar.make(binding.root, "Clicked", Snackbar.LENGTH_LONG).show()
-                var inputtedEmail = binding.email.text.toString()
-                val inputtedPassword = binding.password.text.toString()
+        categories = arrayListOf()
+        val category1 = Category(R.drawable.ic_launcher_background, "Men")
+        val category2 = Category(R.drawable.ic_launcher_background, "Women")
+        val category3 = Category(R.drawable.ic_launcher_background, "Devices")
+        val category4 = Category(R.drawable.ic_launcher_background, "Gadgets")
+        val category5 = Category(R.drawable.ic_launcher_background, "Gaming")
 
-                inputtedEmail = inputtedEmail.replace('r', 'g', true)
+        categories.add(category1)
+        categories.add(category2)
+        categories.add(category3)
+        categories.add(category4)
+        categories.add(category5)
 
-                binding.gottenEmail.text = inputtedEmail
-                binding.gottenPassword.text = inputtedPassword
-            }
-        }
+        Log.d("MainActivity", "onCreate: ${categories.size}")
+        categoryAdapter = CategoryAdapter(categories)
 
-        val seekBarChangeListener = object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                Log.d("MainActivity", "Progress is: $progress")
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-                Log.d("MainActivity", "started touch")
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                val progress = seekBar?.progress
-                Log.d("MainActivity", "stopped touch at $progress")
-            }
-        }
-
-        binding.seekbar.setOnSeekBarChangeListener(seekBarChangeListener)
-
-        binding.genderGroup.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.radio1 -> {
-                    gender = "male"
-                }
-
-                R.id.radio2 -> {
-                    gender = "female"
-                }
-
-                else -> throw Exception("Unknown Radio Button ID")
-            }
-        }
-
+        binding.categoriesRecyclerview.adapter = categoryAdapter
+        val linearLayoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.categoriesRecyclerview.layoutManager = linearLayoutManager
     }
 }
+
+/*
+categories = categories.apply {
+            plus(category1)
+            plus(category2)
+            plus(category3)
+            plus(category4)
+            plus(category5)
+        }*/
